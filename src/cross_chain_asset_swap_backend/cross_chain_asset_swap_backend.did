@@ -1,0 +1,19 @@
+type SwapId = text;
+type token = variant { BTC; ETH; ICP };
+
+type SwapRequest = record {
+  swap_id: SwapId;
+  refund_address: text;
+  amount_sats: nat64;
+  recipient_address: text;
+  source_token: token;
+  target_token: token;
+  status: text;
+};
+
+service : {
+  create_swap: (text, nat64, text, token, token) -> (SwapRequest);
+  swap_tokens: (token, token, float64) -> (float64);
+  process_swap: (SwapRequest) -> (float64);
+  check_swap: (SwapId) -> (opt SwapRequest) query;
+};

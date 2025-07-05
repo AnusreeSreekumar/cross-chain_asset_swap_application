@@ -1,0 +1,130 @@
+.page {
+  padding: 56px 0 0 0;
+  min-height: 100vh;
+}
+.sectionTitle {
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+.blueAccent {
+  color: #4bb1ff;
+}
+.sectionDesc {
+  color: #b6b6b6;
+  margin-bottom: 22px;
+}
+.statsCards {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 32px;
+  flex-wrap: nowrap;
+}
+.statCard {
+  background: #2b1756;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px 0 rgba(79, 31, 131, 0.17);
+  padding: 26px 23px;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  transition: box-shadow 0.18s, transform 0.18s;
+}
+.statCard:hover {
+  box-shadow: 0 7px 35px #4bb1ff29;
+  background: linear-gradient(120deg, #2b1756 80%, #a259ff13 100%);
+  transform: scale(1.045);
+}
+.statMain {
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.statLabel {
+  font-size: 1.1rem;
+  color: #b6b6b6;
+}
+.statSub {
+  color: #2ecc40;
+  font-size: 1.01rem;
+  margin-top: 4px;
+}
+.filterBox {
+  background: #2b1756;
+  border-radius: 18px;
+  padding: 18px 18px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 18px;
+  flex-wrap: nowrap;
+  max-width: 600px;
+}
+.searchInput {
+  flex: 1;
+  min-width: 200px;
+  padding: 13px 14px;
+  border-radius: 8px;
+  border: none;
+  background: #32205b;
+  color: #fff;
+  font-size: 1.05rem;
+  outline: none;
+  margin-right: 5px;
+  transition: box-shadow 0.2s;
+}
+.searchInput:focus {
+  box-shadow: 0 2px 12px #a259ff44;
+  background: #3b2973;
+}
+.filterBtn,
+.whiteBtn,
+.exportBtn {
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 1.01rem;
+  cursor: pointer;
+  border: none;
+  transition: 0.19s;
+}
+.filterBtn {
+  background: #a259ff;
+  color: #fff;
+}
+.filterBtn:hover:enabled {
+  background: linear-gradient(90deg,#a259ff,#4bb1ff 90%);
+  filter: brightness(1.1);
+}
+.whiteBtn {
+  background: #fff;
+  color: #a259ff;
+}
+.whiteBtn:hover:enabled {
+  background: #f5f5ff;
+  color: #a259ff;
+}
+.exportBtn {
+  background: #4bb1ff;
+  color: #fff;
+}
+.exportBtn:hover:enabled {
+  background: #a259ff;
+}
+.filterBtn:disabled, .whiteBtn:disabled, .exportBtn:disabled, .searchInput:disabled {
+  background: #aaa !important;
+  color: #666 !important;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.historyPlaceholder {
+  color: #b6b6b6;
+  text-align: center;
+  padding: 38px 0;
+}

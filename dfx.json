@@ -1,0 +1,38 @@
+{
+  "canisters": {
+    "cross_chain_asset_swap_backend": {
+      "candid": "src/cross_chain_asset_swap_backend/cross_chain_asset_swap_backend.did",
+      "package": "cross_chain_asset_swap_backend",
+      "type": "rust"
+    },
+    "cross_chain_asset_swap_frontend": {
+      "dependencies": [
+        "cross_chain_asset_swap_backend"
+      ],
+      "source": [
+        "src/cross_chain_asset_swap_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "cross_chain_asset_swap_frontend"
+    },
+    "internet_identity": {
+      "candid": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity.did",
+      "frontend": {},
+      "remote": {
+        "id": {
+          "ic": "rdmx6-jaaaa-aaaaa-aaadq-cai"
+        }
+      },
+      "type": "custom",
+      "wasm": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity_dev.wasm.gz"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}

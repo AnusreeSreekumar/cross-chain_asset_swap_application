@@ -1,0 +1,22 @@
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  background: #181032;
+  color: #fff;
+  min-height: 100vh;
+  --accent: #a259ff;
+  --accent2: #4bb1ff;
+  --accent3: #5ad1a4;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  outline: none;
+}

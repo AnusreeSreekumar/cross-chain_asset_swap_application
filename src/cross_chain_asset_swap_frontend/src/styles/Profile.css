@@ -1,0 +1,22 @@
+.profile-root {
+  max-width: 700px;
+  margin: 34px auto 0 auto;
+  padding: 0 16px 32px 16px;
+}
+.profile-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.profile-info {
+  background: #2b1756;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px #a259ff22;
+  padding: 22px 15px;
+  font-size: 1.1rem;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
