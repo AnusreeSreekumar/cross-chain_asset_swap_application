@@ -1,7 +1,8 @@
 use ic_cdk_macros::*;
-use ic_cdk::api::management_canister::bitcoin::{BitcoinNetwork, GetBalanceRequest};
-use ic_cdk::call;
-use candid::{Principal, CandidType};
+// use ic_cdk::api::management_canister::bitcoin::{BitcoinNetwork, GetBalanceRequest};
+// use ic_cdk::call;
+// use candid::{Principal}
+use candid::{CandidType};
 use std::collections::HashMap;
 use std::cell::RefCell;
 use serde::{Deserialize, Serialize};
