@@ -105,6 +105,11 @@ import Profile from "./pages/Profile";
 import About from "./pages/About";
 import ProtectedRoute from "./components/ProtectedRoute";
 import "./index.css";
+// import {
+//   canisterId,
+//   createActor
+// } from "../../declarations/cross_chain_asset_swap_backend";
+
 
 /**
  * NOTE:
@@ -115,6 +120,8 @@ import "./index.css";
 export default function App() {
   // TODO: Replace with real wallet connection state from backend/wallet provider
   const isWalletConnected = false; // <-- Set by backend/wallet
+  // const backend = createActor(canisterId);
+
 
   // TODO: Replace with user profile data from backend
   const userProfile = null; // <-- Set by backend
