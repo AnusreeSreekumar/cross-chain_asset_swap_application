@@ -94,9 +94,13 @@
 //   );
 // }
 
-
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import React, { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Header from "./components/Header";
 import Landing from "./pages/Landing";
 import Swap from "./pages/Swap";
@@ -105,11 +109,6 @@ import Profile from "./pages/Profile";
 import About from "./pages/About";
 import ProtectedRoute from "./components/ProtectedRoute";
 import "./index.css";
-// import {
-//   canisterId,
-//   createActor
-// } from "../../declarations/cross_chain_asset_swap_backend";
-
 
 /**
  * NOTE:
@@ -119,30 +118,39 @@ import "./index.css";
  */
 export default function App() {
   // TODO: Replace with real wallet connection state from backend/wallet provider
-  const isWalletConnected = false; // <-- Set by backend/wallet
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [principal, setPrincipal] = useState("");
   // const backend = createActor(canisterId);
 
-
   // TODO: Replace with user profile data from backend
-  const userProfile = null; // <-- Set by backend
+  // const userProfile = null; // <-- Set by backend
 
   return (
     <Router>
-      <Header isWalletConnected={isWalletConnected} userProfile={userProfile} />
+      <Header isWalletConnected={isWalletConnected} userProfile={principal} />
       <Routes>
         <Route
           path="/"
           element={
-            isWalletConnected
-              ? <Navigate to="/swap" replace />
-              : <Landing />
+            isWalletConnected ? (
+              <Navigate to="/swap" replace />
+            ) : (
+              <Landing
+                setIsWalletConnected={setIsWalletConnected}
+                setPrincipal={setPrincipal}
+                principal={principal}
+              />
+            )
           }
         />
         <Route
           path="/swap"
           element={
             <ProtectedRoute isWalletConnected={isWalletConnected}>
-              <Swap />
+              <Swap
+                principal={principal}
+                isWalletConnected={isWalletConnected}
+              />
             </ProtectedRoute>
           }
         />
@@ -158,7 +166,7 @@ export default function App() {
           path="/profile"
           element={
             <ProtectedRoute isWalletConnected={isWalletConnected}>
-              <Profile userProfile={userProfile} />
+              <Profile userProfile={principal} />
             </ProtectedRoute>
           }
         />

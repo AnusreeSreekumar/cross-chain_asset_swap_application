@@ -7,26 +7,28 @@ import { AuthClient } from "@dfinity/auth-client";
  * Landing page.
  * TODO: Connect wallet logic (button) should be triggered from backend/wallet integration.
  */
-export default function Landing() {
-  const [principal, setPrincipal] = useState(null);
+export default function Landing({ setIsWalletConnected, setPrincipal, principal }) {
+  
   const navigate = useNavigate();
 
   //Internet Identity Connection
   const connectIdentity = async () => {
     const authClient = await AuthClient.create();
     try {
-      
       await authClient.login({
-      identityProvider: "https://identity.ic0.app/#authorize",
-      onSuccess: async () => {
-        const identity = authClient.getIdentity();
-        setPrincipal(identity.getPrincipal().toText());
-        navigate("/swap", { replace: true });
-      },
-    });
+        identityProvider: "https://identity.ic0.app/#authorize",
+        onSuccess: async () => {
+          const identity = authClient.getIdentity();
+          const principalText = identity.getPrincipal().toText();
+          console.log("Principal:", principalText);
+          setPrincipal(principalText);
+          setIsWalletConnected(true);
+          navigate("/swap"); 
+        },
+      });
     } catch (error) {
-        alert("Identity connection failed.");
-    } 
+      alert("Identity connection failed.");
+    }
   };
 
   // Plug Wallet Connect
@@ -36,8 +38,10 @@ export default function Landing() {
         const connected = await window.ic.plug.requestConnect();
         if (connected) {
           const principalId = await window.ic.plug.getPrincipal();
+          console.log("Principal:", principalId);
           setPrincipal(principalId);
-          navigate("/swap", { replace: true });
+          setIsWalletConnected(true);
+          navigate("/swap");  
         }
       } catch (e) {
         alert("Plug connection failed.");
@@ -56,9 +60,15 @@ export default function Landing() {
         </div>
         <h2 className="landing-title">Seamless Cross-Chain Asset Swaps</h2>
         <p className="landing-summary">
-          <span className="glow">Your gateway to secure, fast, and trustless swaps between BTC, ICP, and ETH.</span>
-          <br /><br />
-          <b>Our mission:</b> Enable freedom and interoperability for digital assets.<br />
+          <span className="glow">
+            Your gateway to secure, fast, and trustless swaps between BTC, ICP,
+            and ETH.
+          </span>
+          <br />
+          <br />
+          <b>Our mission:</b> Enable freedom and interoperability for digital
+          assets.
+          <br />
           <b>Our vision:</b> Unifying blockchains, one swap at a time.
         </p>
         {/* 
@@ -74,15 +84,14 @@ export default function Landing() {
           <button className="landing-connect-btn" onClick={connectIdentity}>
             Connect Internet Identity
           </button>
-          <button className="landing-connect-btn" onClick={connectPlug} style={{ marginLeft: "1rem" }}>
+          <button
+            className="landing-connect-btn"
+            onClick={connectPlug}
+            style={{ marginLeft: "1rem" }}
+          >
             Connect Plug Wallet
           </button>
         </div>
-        {principal && (
-          <div style={{ marginBottom: "1rem", color: "#0ff" }}>
-            Connected Principal: {principal}
-          </div>
-        )}
         <div className="landing-footer">
           Powered by Internet Computer Protocol
         </div>

@@ -2,7 +2,7 @@ use ic_cdk_macros::*;
 // use ic_cdk::api::management_canister::bitcoin::{BitcoinNetwork, GetBalanceRequest};
 // use ic_cdk::call;
 // use candid::{Principal}
-use candid::{CandidType};
+use candid::{CandidType, Principal };
 use std::collections::HashMap;
 use std::cell::RefCell;
 use serde::{Deserialize, Serialize};
@@ -23,8 +23,12 @@ pub struct SwapRequest {
     pub status: String,
 }
 
-thread_local! {
-    static SWAPS: RefCell<HashMap<SwapId, SwapRequest>> = RefCell::new(HashMap::new());
+#[derive(CandidType, Serialize, Deserialize)]
+pub struct UserProfile {
+    wallet_address: Principal,
+    member_since: String,
+    balance: u64,
+    status: String,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, candid::CandidType, serde::Serialize, serde::Deserialize)]
@@ -34,9 +38,25 @@ pub enum Token {
     ICP,
 }
 
+thread_local! {
+    static SWAPS: RefCell<HashMap<SwapId, SwapRequest>> = RefCell::new(HashMap::new());
+}
+
+
 #[init]
 fn init() {
     ic_cdk::println!("Cross-chain swap backend initialized.");
+}
+
+#[query]
+fn get_user_profile(user: Principal) -> UserProfile {
+    
+    UserProfile {
+        wallet_address: user,
+        member_since: "2024-06-01".to_string(),  
+        balance: 123456,
+        status: "Active".to_string(),
+    }
 }
 
 #[update]
@@ -58,7 +78,7 @@ fn create_swap(refund_address: String, amount_sats: u64, recipient_address: Stri
     swap
 }
 
-#[update]
+#[query]
 fn swap_tokens(source_token: Token, target_token: Token, amount_sats: f64) -> f64 {
     match (source_token, target_token) {
         (Token::BTC, Token::ETH) => {

@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/Profile.css";
+import { canisterId, createActor } from "../../../declarations/cross_chain_asset_swap_backend";
 
 /**
  * Profile page.
@@ -15,6 +16,7 @@ export default function Profile({ userProfile }) {
         {/* TODO: Replace below with real info from backend */}
         <div><strong>Wallet Address:</strong> (from backend)</div>
         <div><strong>Member Since:</strong> (from backend)</div>
+        <div><strong>Account Balance:</strong> (from backend)</div>
         <div><strong>Status:</strong> (from backend)</div>
       </div>
     </main>
