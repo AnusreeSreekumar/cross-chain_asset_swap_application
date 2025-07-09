@@ -12,6 +12,7 @@ export interface SwapRequest {
   'recipient_address' : string,
   'source_token' : token,
 }
+export interface TokenRate { 'usd' : number, 'token' : string }
 export interface UserProfile {
   'member_since' : string,
   'status' : string,
@@ -22,6 +23,7 @@ export type token = { 'BTC' : null } |
   { 'ETH' : null } |
   { 'ICP' : null };
 export interface _SERVICE {
+  'all_token_rates' : ActorMethod<[], Array<TokenRate>>,
   'check_swap' : ActorMethod<[SwapId], [] | [SwapRequest]>,
   'create_swap' : ActorMethod<
     [string, bigint, string, token, token],

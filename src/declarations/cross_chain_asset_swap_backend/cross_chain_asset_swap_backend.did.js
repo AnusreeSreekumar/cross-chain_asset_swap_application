@@ -1,4 +1,5 @@
 export const idlFactory = ({ IDL }) => {
+  const TokenRate = IDL.Record({ 'usd' : IDL.Float64, 'token' : IDL.Text });
   const SwapId = IDL.Text;
   const token = IDL.Variant({
     'BTC' : IDL.Null,
@@ -21,6 +22,7 @@ export const idlFactory = ({ IDL }) => {
     'wallet_address' : IDL.Principal,
   });
   return IDL.Service({
+    'all_token_rates' : IDL.Func([], [IDL.Vec(TokenRate)], ['query']),
     'check_swap' : IDL.Func([SwapId], [IDL.Opt(SwapRequest)], ['query']),
     'create_swap' : IDL.Func(
         [IDL.Text, IDL.Nat64, IDL.Text, token, token],

@@ -18,9 +18,15 @@ type UserProfile = record {
   status: text;
 };
 
+type TokenRate = record {
+  token: text;
+  usd: float64;
+};
+
 service : {
   create_swap: (text, nat64, text, token, token) -> (SwapRequest);
   swap_tokens: (token, token, float64) -> (float64) query;
+  all_token_rates: () -> (vec TokenRate) query;
   process_swap: (SwapRequest) -> (float64);
   check_swap: (SwapId) -> (opt SwapRequest) query;
   get_user_profile: (principal) -> (UserProfile) query;

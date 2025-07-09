@@ -38,6 +38,12 @@ pub enum Token {
     ICP,
 }
 
+#[derive(CandidType, Serialize, Deserialize, Clone)]
+struct TokenRate {
+    token: String,
+    usd: f64,
+}
+
 thread_local! {
     static SWAPS: RefCell<HashMap<SwapId, SwapRequest>> = RefCell::new(HashMap::new());
 }
@@ -108,6 +114,15 @@ fn swap_tokens(source_token: Token, target_token: Token, amount_sats: f64) -> f6
         // Same token or unsupported direction
         _ => 0.0,
     }
+}
+
+#[query]
+fn all_token_rates() -> Vec<TokenRate> {
+    vec![
+        TokenRate { token: "BTC".to_string(), usd: USD_PER_BTC_RATE },
+        TokenRate { token: "ETH".to_string(), usd: USD_PER_ETH_RATE },
+        TokenRate { token: "ICP".to_string(), usd: USD_PER_ICP_RATE },
+    ]
 }
 
 #[update]

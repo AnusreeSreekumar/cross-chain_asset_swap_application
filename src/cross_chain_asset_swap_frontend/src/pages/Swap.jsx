@@ -1,114 +1,8 @@
-// import React from "react";
-// import styles from "./Swap.module.css";
-
-// export default function Swap({ isWalletConnected, swapData }) {
-//   // fallback zeros for not connected
-//   const {
-//     btc = 0, icp = 0, ckbtc = 0,
-//     usdBtc = 0, usdIcp = 0, usdCkbtc = 0,
-//     prices = {}, priceChanges = {},
-//     stats = {}
-//   } = swapData || {};
-
-//   return (
-//     <div className={styles.page}>
-//       <div className={styles.content}>
-//         {/* Left: Swap Form & Balances */}
-//         <div className={styles.left}>
-//           <h2 className={styles.sectionTitle}>
-//             <span className={styles.blueAccent}>⇄</span> Asset Swap
-//           </h2>
-//           <div className={styles.sectionDesc}>Exchange your cryptocurrencies securely with Chain-Key technology</div>
-//           {/* Balances */}
-//           <div className={styles.assetCards}>
-//             <BalanceCard label="Bitcoin (BTC)" value={btc} usd={usdBtc} color="#FF9900" delay={0.15} />
-//             <BalanceCard label="Internet Computer (ICP)" value={icp} usd={usdIcp} color="#4bb1ff" delay={0.25} />
-//             <BalanceCard label="Chain-Key Bitcoin (ckBTC)" value={ckbtc} usd={usdCkbtc} color="#ffe100" delay={0.35} />
-//           </div>
-//           {/* Swap Form */}
-//           <div className={styles.swapBox}>
-//             <h3 className={styles.swapTitle}><span className={styles.blueAccent}>⇄</span> Swap Assets</h3>
-//             <div className={styles.swapForm}>
-//               <div className={styles.swapRow}>
-//                 <input className={styles.swapInput} placeholder="0.0" disabled={!isWalletConnected} />
-//                 <span className={styles.tokenSelect}>BTC</span>
-//                 <span className={styles.balanceText}>Balance: {btc}</span>
-//               </div>
-//               <button className={styles.switchBtn} disabled>↓</button>
-//               <div className={styles.swapRow}>
-//                 <input className={styles.swapInput} placeholder="0.0" disabled={!isWalletConnected} />
-//                 <span className={styles.tokenSelect}>ICP</span>
-//                 <span className={styles.balanceText}>Balance: {icp}</span>
-//               </div>
-//               <button
-//                 className={styles.swapActionBtn}
-//                 disabled={!isWalletConnected}
-//               >
-//                 Swap BTC for ICP
-//               </button>
-//               <div className={styles.secureSwapInfo}>
-//                 ℹ️ <b>Secure Swap:</b> This transaction uses Chain-Key cryptography and threshold ECDSA for trustless cross-chain swaps.
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//         {/* Right: Prices & Stats */}
-//         <div className={styles.right}>
-//           <div className={styles.pricesBox}>
-//             <h4>Live Prices</h4>
-//             <PriceRow label="BTC/ICP" value={prices.btc_icp} change={priceChanges.btc_icp} />
-//             <PriceRow label="ICP/ckBTC" value={prices.icp_ckbtc} change={priceChanges.icp_ckbtc} />
-//             <PriceRow label="BTC/ckBTC" value={prices.btc_ckbtc} change={priceChanges.btc_ckbtc} />
-//           </div>
-//           <div className={styles.statsBox}>
-//             <h4>Market Stats</h4>
-//             <StatRow label="24h Volume" value={stats.volume ? `$${stats.volume}M` : "$0"} />
-//             <StatRow label="Total Liquidity" value={stats.liquidity ? `$${stats.liquidity}M` : "$0"} />
-//             <StatRow label="Active Pairs" value={stats.pairs || 0} />
-//             <StatRow label="Avg. Swap Time" value={stats.swapTime ? `${stats.swapTime}s` : "0s"} />
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// function BalanceCard({ label, value, usd, color, delay }) {
-//   return (
-//     <div className={styles.assetCard} style={{ borderTop: `4px solid ${color}`, animationDelay: `${delay}s` }}>
-//       <div style={{ color, fontWeight: 700, marginBottom: 3 }}>{label}</div>
-//       <div style={{ color: "#fff", fontWeight: 800, fontSize: "2rem" }}>{value}</div>
-//       <div style={{ color: "#b6b6b6", fontSize: "1rem" }}>≈ ${usd}</div>
-//     </div>
-//   );
-// }
-
-// function PriceRow({ label, value, change }) {
-//   return (
-//     <div className={styles.priceRow}>
-//       <span className={styles.priceLabel}>{label}</span>
-//       <span className={styles.priceValue}>{value}</span>
-//       <span className={change >= 0 ? styles.priceUp : styles.priceDown}>
-//         {change >= 0 ? "+" : ""}{change}%
-//       </span>
-//     </div>
-//   );
-// }
-// function StatRow({ label, value }) {
-//   return (
-//     <div className={styles.statRow}>
-//       <span className={styles.statLabel}>{label}</span>
-//       <span className={styles.statValue}>{value}</span>
-//     </div>
-//   );
-// }
-
 import React, { useState, useEffect } from "react";
 import "../styles/Swap.css";
 import {
   canisterId,
   createActor,
-  idlFactory,
 } from "../../../declarations/cross_chain_asset_swap_backend";
 
 /**
@@ -130,6 +24,12 @@ export default function Swap({ principal, isWalletConnected }) {
   const [inputAmount, setInputAmount] = useState("");
   const [outputAmount, setOutputAmount] = useState("");
   const [recipientAddress, setRecipientAddress] = useState("");
+
+  const [tokenConversions, setTokenConversions] = useState({
+    BTC: { ICP: null, ETH: null, USD: null },
+    ICP: { BTC: null, ETH: null, USD: null },
+    ETH: { BTC: null, ICP: null, USD: null },
+  });
 
   useEffect(() => {
     const fetchConvertedAmount = async () => {
@@ -156,37 +56,61 @@ export default function Swap({ principal, isWalletConnected }) {
     fetchConvertedAmount();
   }, [inputToken, outputToken, inputAmount]);
 
+  useEffect(() => {
+    const fetchAllConversions = async () => {
+      try {
+        const ratesArray = await backend.all_token_rates();
+        const usdRates = Object.fromEntries(
+          ratesArray.map((r) => [r.token, r.usd])
+        );
+
+        const conversions = {
+          BTC: {
+            ICP: await backend.swap_tokens({ BTC: null }, { ICP: null }, 1),
+            ETH: await backend.swap_tokens({ BTC: null }, { ETH: null }, 1),
+            USD: usdRates["BTC"],
+          },
+          ICP: {
+            BTC: await backend.swap_tokens({ ICP: null }, { BTC: null }, 1),
+            ETH: await backend.swap_tokens({ ICP: null }, { ETH: null }, 1),
+            USD: usdRates["ICP"],
+          },
+          ETH: {
+            BTC: await backend.swap_tokens({ ETH: null }, { BTC: null }, 1),
+            ICP: await backend.swap_tokens({ ETH: null }, { ICP: null }, 1),
+            USD: usdRates["ETH"],
+          },
+        };
+
+        setTokenConversions(conversions);
+      } catch (error) {
+        console.error("Failed to fetch conversions", error);
+      }
+    };
+
+    fetchAllConversions();
+  }, []);
+
   async function handleSwap() {
     if (!principal || !isWalletConnected) {
       window.alert("Wallet not connected.");
       return;
     }
-    // const principal = await window.ic.plug.getPrincipal();
-    console.log("principal", principal);
 
-    await window.ic.plug.requestConnect({
-      whitelist: ["uxrrr-q7777-77774-qaaaq-cai"],
-      host: "http://127.0.0.1:4943",
-    });
+    console.log("principal", principal);
+    console.log("Calling canisterId:", canisterId);
 
     try {
-      const actor = await window.ic.plug.createActor({
-        canisterId,
-        interfaceFactory: idlFactory,
-      });
-      console.log("CanisterId", canisterId);
-      console.log("interfaceFactory", idlFactory);
-
-      const response = await actor.create_swap(
-        principal.toText(), // refund_address
-        BigInt(inputAmount), // amount_sats
-        recipientAddress, // recipient_address
-        { [inputToken]: null }, // source_token as enum variant
+      const response = await backend.create_swap(
+        typeof principal === "string" ? principal : principal.toText(),
+        Number(inputAmount),
+        recipientAddress, 
+        { [inputToken]: null }, 
         { [outputToken]: null }
       );
 
       console.log("Swap result:", response);
-      window.alert(`Swap successful! Response: ${JSON.stringify(response)}`);
+      window.alert(`Swap successful! ID: ${response.swap_id}`);
     } catch (error) {
       console.error("Swap failed:", error);
       window.alert(`Swap failed: ${error.message}`);
@@ -201,8 +125,8 @@ export default function Swap({ principal, isWalletConnected }) {
           <TokenCard
             key={token}
             name={token}
-            // value={balances[token]}
-            // usd={usdValues[token]}
+            value={tokenConversions[token]}
+            usd={tokenConversions[token]?.USD}
           />
         ))}
       </div>
@@ -280,8 +204,7 @@ export default function Swap({ principal, isWalletConnected }) {
   );
 }
 
-function TokenCard({ name }) {
-  // TODO: Get value and USD from backend
+function TokenCard({ name, value = {}, usd }) {
   const colors = { BTC: "#FF9900", ICP: "#4bb1ff", ETH: "#627eea" };
   const icons = {
     BTC: "₿",
@@ -300,15 +223,34 @@ function TokenCard({ name }) {
       </svg>
     ),
   };
+
+  const formattedRates =
+    value &&
+    Object.entries(value)
+      .filter(([key]) => key !== "USD" && value[key] != null)
+      .map(([key, val]) => (
+        <div key={key}>
+          {Number(val).toLocaleString(undefined, {
+            maximumFractionDigits: 2,
+          })}{" "}
+          {key}
+        </div>
+      ));
+
   return (
     <div className="swap-token-card" style={{ borderColor: colors[name] }}>
       <div className="swap-token-icon" style={{ color: colors[name] }}>
         {icons[name]}
       </div>
       <div className="swap-token-title">{name}</div>
-      {/* TODO: Replace 0 with real value */}
-      <div className="swap-token-value">0</div>
-      <div className="swap-token-usd">≈ $0</div>
+      <div className="swap-token-value">
+        <div className="conversion-list">{formattedRates || "Loading..."}</div>
+      </div>
+      <div className="swap-token-usd">
+        ≈ ${usd ? usd.toLocaleString(undefined, { maximumFractionDigits: 2 }) : "0.00"}
+      </div>
     </div>
   );
 }
+
+
