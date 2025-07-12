@@ -2,36 +2,35 @@ import type { Principal } from '@dfinity/principal';
 import type { ActorMethod } from '@dfinity/agent';
 import type { IDL } from '@dfinity/candid';
 
-export type SwapId = string;
 export interface SwapRequest {
   'status' : string,
   'refund_address' : string,
-  'swap_id' : SwapId,
+  'swap_id' : string,
   'amount_sats' : bigint,
-  'target_token' : token,
+  'target_token' : Token,
   'recipient_address' : string,
-  'source_token' : token,
+  'source_token' : Token,
 }
+export type Token = { 'BTC' : null } |
+  { 'ETH' : null } |
+  { 'ICP' : null };
 export interface TokenRate { 'usd' : number, 'token' : string }
 export interface UserProfile {
   'member_since' : string,
   'status' : string,
   'balance' : bigint,
-  'wallet_address' : Principal,
+  'wallet_address' : string,
 }
-export type token = { 'BTC' : null } |
-  { 'ETH' : null } |
-  { 'ICP' : null };
 export interface _SERVICE {
   'all_token_rates' : ActorMethod<[], Array<TokenRate>>,
-  'check_swap' : ActorMethod<[SwapId], [] | [SwapRequest]>,
+  'claim_test_tokens' : ActorMethod<[string], undefined>,
   'create_swap' : ActorMethod<
-    [string, bigint, string, token, token],
+    [string, bigint, string, Token, Token],
     SwapRequest
   >,
-  'get_user_profile' : ActorMethod<[Principal], UserProfile>,
-  'process_swap' : ActorMethod<[SwapRequest], number>,
-  'swap_tokens' : ActorMethod<[token, token, number], number>,
+  'get_user_profile' : ActorMethod<[string], UserProfile>,
+  'get_user_swaps' : ActorMethod<[string], Array<SwapRequest>>,
+  'swap_tokens' : ActorMethod<[Token, Token, number], number>,
 }
 export declare const idlFactory: IDL.InterfaceFactory;
 export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];

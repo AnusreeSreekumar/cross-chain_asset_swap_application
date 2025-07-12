@@ -3,3 +3,4 @@ node_modules
 rust_token/
 .dfx/
 .env
+src/cross_chain_asset_swap_frontend/dist/

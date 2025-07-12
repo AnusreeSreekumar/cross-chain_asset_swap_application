@@ -1,59 +1,14 @@
-// import React from "react";
-// import { Link, useLocation } from "react-router-dom";
-// import styles from "./Header.module.css";
-
-// export default function Header({ isConnected, onConnectWallet, onDisconnectWallet }) {
-//   const { pathname } = useLocation();
-
-//   return (
-//     <nav className={styles.headerBar}>
-//       <div className={styles.logoArea}>
-//         <div className={styles.logo}>⇄</div>
-//         <span className={styles.title}>ChainSwap</span>
-//         <span className={styles.badge}>ICP Powered</span>
-//       </div>
-//       <div className={styles.navLinks}>
-//         <NavTab to="/dashboard" active={pathname === "/dashboard"}>Dashboard</NavTab>
-//         <NavTab to="/swap" active={pathname === "/swap"}>Swap</NavTab>
-//         <NavTab to="/history" active={pathname === "/history"}>History</NavTab>
-//       </div>
-//       <div className={styles.walletArea}>
-//         {!isConnected ? (
-//           <button className={styles.connectBtn} onClick={onConnectWallet}>
-//             Connect Wallet
-//           </button>
-//         ) : (
-//           <span className={styles.userProfile}>
-//             Wallet Connected
-//             <button className={styles.disconnectBtn} onClick={onDisconnectWallet}>Disconnect</button>
-//           </span>
-//         )}
-//       </div>
-//     </nav>
-//   );
-// }
-
-// function NavTab({ to, active, children }) {
-//   return (
-//     <Link
-//       to={to}
-//       className={`${styles.navBtn} ${active ? styles.navBtnActive : ""}`}
-//     >
-//       {children}
-//     </Link>
-//   );
-// }
-
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import "../styles/Header.css";
 
 /**
  * Header navigation.
- * @param {boolean} isWalletConnected - Should come from backend/wallet.
- * @param {object|null} userProfile - Should come from backend.
+ * @param {boolean} isWalletConnected - Whether a wallet is connected.
+ * @param {object|null} userProfile - Optional user info.
+ * @param {function} onDisconnect - Callback to disconnect wallet or II.
  */
-export default function Header({ isWalletConnected, userProfile }) {
+export default function Header({ isWalletConnected, userProfile, onDisconnect }) {
   const { pathname } = useLocation();
 
   return (
@@ -62,6 +17,7 @@ export default function Header({ isWalletConnected, userProfile }) {
         <span className="logo">⇄</span>
         <span className="title">ChainSwap</span>
       </div>
+
       <nav className="header-nav">
         {isWalletConnected && (
           <>
@@ -72,11 +28,13 @@ export default function Header({ isWalletConnected, userProfile }) {
         )}
         <NavLink to="/about" label="About Us" active={pathname === "/about"} />
       </nav>
+
       <div className="header-right">
-        {/* 
-          // TODO: Show profile info or disconnect/logout here using backend logic.
-          // Example: if (userProfile) { ... }
-        */}
+        {isWalletConnected && (
+          <button className="disconnect-button" onClick={onDisconnect}>
+            Disconnect
+          </button>
+        )}
       </div>
     </header>
   );

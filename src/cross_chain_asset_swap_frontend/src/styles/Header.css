@@ -74,3 +74,17 @@
   background: var(--accent2);
   box-shadow: 0 4px 16px #4bb1ff88;
 }
+.disconnect-button {
+  background-color: #ff4d4f;
+  border: none;
+  color: white;
+  padding: 0.5rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.disconnect-button:hover {
+  background-color: #d9363e;
+}

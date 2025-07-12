@@ -144,3 +144,15 @@
   filter: grayscale(0.5);
   cursor: not-allowed;
 }
+.conversion-list {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #ccc;
+}
+.swap-token-usd {
+  margin-top: 0.4rem;
+  font-weight: 500;
+  color: #fff;
+  font-size: 0.95rem;
+}

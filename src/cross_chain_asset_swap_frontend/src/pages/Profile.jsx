@@ -1,23 +1,75 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/Profile.css";
-import { canisterId, createActor } from "../../../declarations/cross_chain_asset_swap_backend";
+import {
+  canisterId,
+  createActor,
+} from "../../../declarations/cross_chain_asset_swap_backend";
 
-/**
- * Profile page.
- * @param {object|null} userProfile - Should come from backend.
- *
- * TODO: Display real profile info fetched from backend.
- */
-export default function Profile({ userProfile }) {
+export default function Profile({ principal }) {
+  const [profile, setProfile] = useState(null);
+  const backend = createActor(canisterId);
+
+  const userId = principal?.toText?.() || principal;
+  console.log("User ID:", userId);
+  console.log("Principal value (raw):", principal);
+  console.log("Resolved userId:", userId);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        if (!userId) return;
+        const data = await backend.get_user_profile(userId);
+        setProfile(data);
+      } catch (error) {
+        console.error("Failed to fetch profile:", error);
+      }
+    };
+
+    fetchProfile();
+  }, [userId]);
+
+  async function claim_tokens() {
+    try {
+      if (!userId) return;
+      await backend.claim_test_tokens(userId);
+      const updated = await backend.get_user_profile(userId);
+      setProfile(updated);
+    } catch (error) {
+      console.error("Failed to add initial balance:", error);
+    }
+  }
+
   return (
     <main className="profile-root fadeInUp">
       <h2 className="profile-title">Profile</h2>
       <div className="profile-info">
-        {/* TODO: Replace below with real info from backend */}
-        <div><strong>Wallet Address:</strong> (from backend)</div>
-        <div><strong>Member Since:</strong> (from backend)</div>
-        <div><strong>Account Balance:</strong> (from backend)</div>
-        <div><strong>Status:</strong> (from backend)</div>
+        <div>
+          <strong>Wallet Address:</strong>{" "}
+          {profile?.wallet_address ?? "Loading..."}
+        </div>
+        <div>
+          <strong>Member Since:</strong> {profile?.member_since ?? "Loading..."}
+        </div>
+        <div>
+          <strong>Account Balance:</strong>{" "}
+          {profile?.balance !== undefined
+            ? `${profile.balance} ICP`
+            : "Loading..."}
+        </div>
+        <div>
+          <strong>Status:</strong> {profile?.status ?? "Loading..."}
+        </div>
+        <div className="profile-claim-button">
+          <button
+            className="claim-btn"
+            onClick={(e) => {
+              e.preventDefault();
+              claim_tokens();
+            }}
+          >
+            Claim Test Tokens
+          </button>
+        </div>
       </div>
     </main>
   );
