@@ -2,7 +2,7 @@
 //Sender account is an actual Internet Identity/Plug Wallet account.
 
 use ic_cdk_macros::*;
-use candid::{CandidType, Principal};
+use candid::CandidType;
 use std::collections::HashMap;
 use std::cell::RefCell;
 use serde::{Deserialize, Serialize};

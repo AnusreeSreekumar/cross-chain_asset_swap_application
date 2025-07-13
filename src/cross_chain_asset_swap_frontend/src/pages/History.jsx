@@ -37,7 +37,13 @@ export default function History({ principal }) {
                 <strong>ID:</strong> {swap.swap_id} |{" "}
                 <strong>{getTokenName(swap.source_token)}</strong> →{" "}
                 <strong>{getTokenName(swap.target_token)}</strong> |{" "}
-                <strong>Amount:</strong> {swap.amount_sats ?? 0}
+                <strong>Amount:</strong>{" "}
+                {(Number(swap.amount_sats?.toString?.()) / 100_000_000).toFixed(
+                  8
+                )}{" "}
+                {getTokenName(swap.source_token)} | <strong>To:</strong>{" "}
+                {swap.recipient_address} | <strong>Status:</strong>{" "}
+                {swap.status === "Completed" ? "✔ Completed" : "⌛ Pending"}
               </li>
             ))}
           </ul>
